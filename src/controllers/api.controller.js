@@ -61,9 +61,9 @@ class ApiController {
     }
 
     static newTourDate(req, res) {
-        const { showDate, show, scenary, place } = req.body
+        const { showDate, showName, scenary, place } = req.body
 
-        if (!showDate || !show || !scenary || !place) {
+        if (!showDate || !showName || !scenary || !place) {
             res.status(500).json({ error: true, message: "Missing id param in Body Request" })
             return
         }
@@ -73,12 +73,13 @@ class ApiController {
             VALUES (NULL, ?, ?, ?, ?)
         `)
 
-        query.insert([show, scenary, place, showDate])
+        query.insert([showName, scenary, place, showDate])
             .then(data => {
                 console.log(data)
-                res.status(200).json({ error: false, message: `Tour: ${show} - saved in database.` })
+                res.status(200).json({ error: false, message: `Tour: ${showName} - saved in database.` })
             })
             .catch(e => {
+                console.log(e)
                 res.status(500).json({ error: true, message: e.toString() })
             })
     }
@@ -87,7 +88,7 @@ class ApiController {
         const { id, showDate, showName, scenary, place } = req.body
 
         if (!id || !showDate || !showName || !scenary || !place) {
-            res.status(500).json({ error: true, message: "Missing id param in Body Request" })
+            res.status(500).json({ error: true, message: "Missing params in Body Request" })
             return
         }
 
