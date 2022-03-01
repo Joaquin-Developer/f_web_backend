@@ -24,8 +24,9 @@ class ApiController {
                 scenary,
                 place,
                 show_date
-            FROM TOUR
-            ORDER BY show_date ASC
+            FROM TOUR 
+            WHERE show_date >= CURDATE() 
+            ORDER BY show_date ASC;
         `)
 
         query.select()
