@@ -25,7 +25,4 @@ def insert():
 
 if __name__ == "__main__":
     # insert()
-    data = get_data()
-    print(data)
-    print(len(data))
     
