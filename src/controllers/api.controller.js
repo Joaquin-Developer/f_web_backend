@@ -25,6 +25,28 @@ class ApiController {
                 place,
                 show_date
             FROM TOUR 
+            ORDER BY show_date ASC;
+        `)
+
+        query.select()
+            .then(data => res.status(200).json(JSON.parse(data)))
+            .catch(error => {
+                console.log(error)
+                res.status(500) - json({ error: true, message: error.toString() })
+            })
+
+    }
+
+    static getActualTourDates(req, res) {
+        // return tour_dates where date >= today
+        const query = new Query(`
+            SELECT 
+                tour_id,
+                tour_show,
+                scenary,
+                place,
+                show_date
+            FROM TOUR 
             WHERE show_date >= CURDATE() 
             ORDER BY show_date ASC;
         `)
