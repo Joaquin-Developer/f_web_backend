@@ -4,7 +4,7 @@ const cors = require("cors")
 const app = express()
 
 // settings:
-app.set("port", process.env.PORT || 5000)
+app.set("port", process.env.PORT || 5016)
 app.use(cors({})) /* config */
 app.use(express.json())
 app.use(express.urlencoded({ extended: false })) // read html forms
