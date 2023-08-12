@@ -32,7 +32,7 @@ class ApiController {
             .then(data => res.status(200).json(JSON.parse(data)))
             .catch(error => {
                 console.log(error)
-                res.status(500) - json({ error: true, message: error.toString() })
+                res.status(500).json({ error: true, message: error.toString() })
             })
 
     }
@@ -55,9 +55,30 @@ class ApiController {
             .then(data => res.status(200).json(JSON.parse(data)))
             .catch(error => {
                 console.log(error)
-                res.status(500) - json({ error: true, message: error.toString() })
+                res.status(500).json({ error: true, message: error.toString() })
             })
 
+    }
+
+    static getCurrentMonthTourDates(req, res) {
+        const query = new Query(`
+            SELECT 
+                tour_id,
+                tour_show,
+                scenary,
+                place,
+                show_date
+            FROM TOUR 
+            WHERE DATE_FORMAT(show_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+            ORDER BY show_date ASC;
+        `)
+
+        query.select()
+            .then(data => res.status(200).json(JSON.parse(data)))
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({ error: true, message: error.toString() })
+            })
     }
 
     static newTourDate(req, res) {
