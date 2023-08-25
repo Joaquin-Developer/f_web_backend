@@ -9,5 +9,6 @@ router.get("/all_tour_dates", controller.getAllTourDates)
 router.post("/tour_date", controller.newTourDate)
 router.delete("/tour_date", controller.deleteTourDate)
 router.post("/update_tour_date", controller.updateTourDate)
+router.post("tour_dates_by_location", controller.getTourDatesByLocation)
 
 module.exports = router

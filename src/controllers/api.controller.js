@@ -140,6 +140,55 @@ class ApiController {
             })
     }
 
+    static getTourDatesByLocation(req, res) {
+        const { city, state, country, countryCode } = req.body
+
+        let countryCond
+
+        if (country) {
+            countryCond = `.country = '${country}'`
+        } else if (countryCode) {
+            countryCond = `.country_code = '${countryCode}'`
+        }
+
+        const query = new Query(`
+            SELECT 
+                t.tour_id,
+                t.tour_show,
+                t.scenary,
+                t.place,
+                t.show_date
+            FROM
+                TOUR t
+                JOIN location_data ld on t.location_id = ld.id
+            WHERE
+                ld.city = '${city}' OR
+                (ld.city IS NULL AND ld.state = '${state}' AND
+                    EXISTS (
+                        SELECT 1
+                        FROM location_data ld_state
+                        WHERE ld_state.state = 'state'
+                        AND ld_state.id = t.location_id
+                    )
+                ) OR
+                (ld.city IS NULL AND ld.state IS NULL AND ld.${countryCond} AND
+                    EXISTS (
+                        SELECT 1
+                        FROM location_data ld_country
+                        WHERE ld_country.${countryCond}
+                        AND ld_country.id = t.location_id
+                    )
+                )
+        `)
+
+        query.select()
+            .then(data => res.status(200).json(JSON.parse(data)))
+            .catch(error => {
+                console.log(error)
+                res.status(500).json({ error: true, message: error.toString() })
+            })
+
+    }
 }
 
 module.exports = ApiController
