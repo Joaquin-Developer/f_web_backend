@@ -1,8 +1,6 @@
-const utils = require("../../csv_to_json/main")
-const config = require("../../core/config")
 const Tour = require("../modules/Tour")
 const Query = require("../modules/Query")
-const { json } = require("express/lib/response")
+
 
 class ApiController {
 
