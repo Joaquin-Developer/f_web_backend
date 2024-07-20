@@ -123,11 +123,52 @@ class ApiController {
     }
 
     static updateShowDate(req, res) {
+        const { showId, tourId, cityId, showDate, scenary } = req.body
+
+        if (!showId || !tourId || !cityId || !showDate || !scenary) {
+            res.status(500).json({ error: true, message: "Missing params in Body Request" })
+            return
+        }
+
+        const query = new Query(```
+            UPDATE shows
+            SET
+                tour_id = ?,
+                city_id = ?,
+                show_date = ?,
+                scenary = ?
+            WHERE show_id = ?
+        ```)
+
+        query.update([tourId, cityId, showDate, scenary, showId])
+            .then(data => {
+                console.log(data)
+                res.status(200).json({ error: false, message: `Show: ${showId} - UPDATED in database.` })
+            })
+            .catch(e => {
+                res.status(500).json({ error: true, message: e.toString() })
+            })
 
     }
 
     static deleteShowDate(req, res) {
+        const { showId } = req.body
 
+        if (!showId) {
+            res.status(500).json({ error: true, message: "Missing showId param in Body Request" })
+            return
+        }
+
+        const query = new Query(`DELETE FROM shows WHERE show_id = ?`)
+
+        query.update([showId])
+            .then(data => {
+                console.log(data)
+                res.status(200).json({ error: false, message: `Show: ${showId} - DELETED.` })
+            })
+            .catch(e => {
+                res.status(500).json({ error: true, message: e.toString() })
+            })
     }
 
     static getAllTours(req, res) {
@@ -227,56 +268,6 @@ class ApiController {
         return null
     }
 
-    // TODO - Change this!
-    static getTourDatesByLocation(req, res) {
-        const { city, state, country, countryCode } = req.body
-
-        let countryCond
-
-        if (country) {
-            countryCond = `.country = '${country}'`
-        } else if (countryCode) {
-            countryCond = `.country_code = '${countryCode}'`
-        }
-
-        const query = new Query(`
-            SELECT 
-                t.tour_id,
-                t.tour_show,
-                t.scenary,
-                t.place,
-                t.show_date
-            FROM
-                TOUR t
-                JOIN location_data ld on t.location_id = ld.id
-            WHERE
-                ld.city = '${city}' OR
-                (ld.city IS NULL AND ld.state = '${state}' AND
-                    EXISTS (
-                        SELECT 1
-                        FROM location_data ld_state
-                        WHERE ld_state.state = 'state'
-                        AND ld_state.id = t.location_id
-                    )
-                ) OR
-                (ld.city IS NULL AND ld.state IS NULL AND ld.${countryCond} AND
-                    EXISTS (
-                        SELECT 1
-                        FROM location_data ld_country
-                        WHERE ld_country.${countryCond}
-                        AND ld_country.id = t.location_id
-                    )
-                )
-        `)
-
-        query.select()
-            .then(data => res.status(200).json(JSON.parse(data)))
-            .catch(error => {
-                console.log(error)
-                res.status(500).json({ error: true, message: error.toString() })
-            })
-
-    }
 }
 
 module.exports = ApiController

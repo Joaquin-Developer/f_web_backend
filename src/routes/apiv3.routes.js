@@ -58,6 +58,24 @@ router.put("/show_dates", controller.newShowDate)
  * /show_dates:
  *   post:
  *     summary: Update an existing show date
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               showId:
+ *                 type: integer
+ *               tourId:
+ *                 type: integer
+ *               cityId:
+ *                 type: integer
+ *               showDate:
+ *                 type: string
+ *                 format: date
+ *               scenary:
+ *                 type: string
  */
 router.post("/show_dates", controller.updateShowDate)
 
@@ -66,6 +84,15 @@ router.post("/show_dates", controller.updateShowDate)
  * /show_dates:
  *   delete:
  *     summary: Delete show date
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               showId:
+ *                 type: integer
  */
 router.delete("/show_dates", controller.deleteShowDate)
 
