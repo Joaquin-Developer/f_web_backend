@@ -6,6 +6,7 @@ const { json } = require("express/lib/response")
 
 class ApiController {
 
+    // deprecated method, used in api v1
     static getTourDates(req, res) {
         try {
             const data = Tour.getAllTourDates()
@@ -18,14 +19,24 @@ class ApiController {
 
     static getAllTourDates(req, res) {
         const query = new Query(`
-            SELECT 
-                tour_id,
-                tour_show,
-                scenary,
-                place,
-                show_date
-            FROM TOUR 
-            ORDER BY show_date ASC;
+            SELECT
+                t.tour_id,
+                s.show_id,
+                t.tour_name as tour_show,
+                s.scenary,
+                c.city_name,
+                st.state_name,
+                ct.country_name,
+                ct.country_short_name,
+                s.show_date
+            FROM
+                shows s
+                JOIN tours t on s.tour_id = t.tour_id
+                JOIN cities c on s.city_id = c.city_id
+                JOIN states st on c.state_id = st.state_id
+                JOIN countries ct on st.country_id = ct.country_id
+            ORDER BY
+                s.show_date ASC;
         `)
 
         query.select()
@@ -37,18 +48,29 @@ class ApiController {
 
     }
 
+    // return tour_dates where date >= today
     static getActualTourDates(req, res) {
-        // return tour_dates where date >= today
         const query = new Query(`
-            SELECT 
-                tour_id,
-                tour_show,
-                scenary,
-                place,
-                show_date
-            FROM TOUR 
-            WHERE show_date >= CURDATE() 
-            ORDER BY show_date ASC;
+            SELECT
+                t.tour_id,
+                s.show_id,
+                t.tour_name as tour_show,
+                s.scenary,
+                c.city_name,
+                st.state_name,
+                ct.country_name,
+                ct.country_short_name,
+                s.show_date
+            FROM
+                shows s
+                JOIN tours t on s.tour_id = t.tour_id
+                JOIN cities c on s.city_id = c.city_id
+                JOIN states st on c.state_id = st.state_id
+                JOIN countries ct on st.country_id = ct.country_id
+            WHERE
+                s.show_date >= CURDATE()
+            ORDER BY
+                s.show_date ASC;
         `)
 
         query.select()
@@ -62,15 +84,26 @@ class ApiController {
 
     static getCurrentMonthTourDates(req, res) {
         const query = new Query(`
-            SELECT 
-                tour_id,
-                tour_show,
-                scenary,
-                place,
-                show_date
-            FROM TOUR 
-            WHERE DATE_FORMAT(show_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
-            ORDER BY show_date ASC;
+            SELECT
+                t.tour_id,
+                s.show_id,
+                t.tour_name as tour_show,
+                s.scenary,
+                c.city_name,
+                st.state_name,
+                ct.country_name,
+                ct.country_short_name,
+                s.show_date
+            FROM
+                shows s
+                JOIN tours t on s.tour_id = t.tour_id
+                JOIN cities c on s.city_id = c.city_id
+                JOIN states st on c.state_id = st.state_id
+                JOIN countries ct on st.country_id = ct.country_id
+            WHERE
+                DATE_FORMAT(show_date, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')
+            ORDER BY
+                s.show_date ASC;
         `)
 
         query.select()

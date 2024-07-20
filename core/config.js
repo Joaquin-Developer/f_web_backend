@@ -4,8 +4,8 @@ module.exports = {
     "api": null,
     "database": {
         "NAME": "tour_dates",
-        "USER": "root",
-        "PASSWORD": "",
+        "USER": "admin",
+        "PASSWORD": "admin",
         "HOST": "127.0.0.1"
     }
 }
