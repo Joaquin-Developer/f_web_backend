@@ -172,7 +172,7 @@ class ApiController {
     }
 
     static getAllCountries(req, res) {
-        new Query("SELECT country_name FROM countries").select()
+        new Query("SELECT country_id, country_name FROM countries").select()
         .then(data => res.status(200).json(JSON.parse(data)))
         .catch(error => {
             console.log(error)
@@ -184,10 +184,10 @@ class ApiController {
         const { country } = req.body
         
         new Query(`
-            SELECT DISTINCT c.country_name
+            SELECT DISTINCT st.state_id, st.state_name
             FROM states st
-            JOIN countries c on st.country_id = c.country_id
-            WHERE upper(c.country_name) = ${country.toUpperCase()}
+            JOIN countries ct on st.country_id = ct.country_id
+            WHERE upper(ct.country_name) = '${country.toUpperCase()}'
         `).select()
         .then(data => res.status(200).json(JSON.parse(data)))
         .catch(error => {
@@ -200,13 +200,13 @@ class ApiController {
         const { country, state } = req.body
 
         new Query(`
-            SELECT DISTINCT c.city_name
+            SELECT DISTINCT c.city_id, c.city_name
             FROM cities c
             JOIN states st on c.state_id = st.state_id
-            JOIN countries c on st.country_id = c.country_id
+            JOIN countries ct on st.country_id = ct.country_id
             WHERE
-                upper(c.country_name) = ${country.toUpperCase()}
-                and upper(st.state_name) = ${state.toUpperCase()}
+                upper(ct.country_name) = '${country.toUpperCase()}'
+                and upper(st.state_name) = '${state.toUpperCase()}'
         `).select()
         .then(data => res.status(200).json(JSON.parse(data)))
         .catch(error => {
