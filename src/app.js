@@ -10,8 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false })) // read html forms
 
 // routes:
-// app.use("/api/v1/", require("./routes/apiv1.routes"))
-app.use("/api/v2/", require("./routes/apiv2.routes"))
+app.use("/api/v3/", require("./routes/apiv3.routes"))
 
 // 404 not found requests:
 app.use((request, response, next) => {

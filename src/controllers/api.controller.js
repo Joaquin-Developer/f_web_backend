@@ -3,19 +3,7 @@ const Query = require("../modules/Query")
 
 
 class ApiController {
-
-    // deprecated method, used in api v1
-    static getTourDates(req, res) {
-        try {
-            const data = Tour.getAllTourDates()
-            res.status(200).json(data)
-        } catch (error) {
-            res.status(500).json({ "error": JSON.stringify(error) })
-        }
-
-    }
-
-    static getAllTourDates(req, res) {
+    static getAllShowDates(req, res) {
         const query = new Query(`
             SELECT
                 t.tour_id,
@@ -47,7 +35,7 @@ class ApiController {
     }
 
     // return tour_dates where date >= today
-    static getActualTourDates(req, res) {
+    static getActualShowDates(req, res) {
         const query = new Query(`
             SELECT
                 t.tour_id,
@@ -80,7 +68,7 @@ class ApiController {
 
     }
 
-    static getCurrentMonthTourDates(req, res) {
+    static getCurrentMonthShowDates(req, res) {
         const query = new Query(`
             SELECT
                 t.tour_id,
@@ -109,6 +97,27 @@ class ApiController {
             .catch(error => {
                 console.log(error)
                 res.status(500).json({ error: true, message: error.toString() })
+            })
+    }
+
+    static newTour(req, res) {
+        const { tourName } = req.body
+
+        if (!tourName) {
+            res.status(500).json({ error: true, message: "Missing tourName param in Body Request" })
+            return
+        }
+
+        const query = new Query(`INSERT INTO tours VALUES (NULL, ?)`)
+
+        query.insert([tourName])
+            .then(data => {
+                console.log(data)
+                res.status(200).json({ error: false, message: `Tour: ${tourName} - saved in database.` })
+            })
+            .catch(e => {
+                console.log(e)
+                res.status(500).json({ error: true, message: e.toString() })
             })
     }
 
