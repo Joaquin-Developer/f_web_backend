@@ -34,6 +34,22 @@ router.get("/show_dates_current_month", controller.getCurrentMonthShowDates)
  * /show_dates:
  *   put:
  *     summary: Create a new show date
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourId:
+ *                 type: integer
+ *               cityId:
+ *                 type: integer
+ *               showDate:
+ *                 type: string
+ *                 format: date
+ *               scenary:
+ *                 type: string
  */
 router.put("/show_dates", controller.newShowDate)
 
@@ -68,6 +84,15 @@ router.get("/tours", controller.getAllTours)
  * /tours:
  *   put:
  *     summary: Create a new tour
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourName:
+ *                 type: string
  */
 router.put("/tours", controller.newTour)
 
@@ -76,6 +101,17 @@ router.put("/tours", controller.newTour)
  * /tours:
  *   post:
  *     summary: Update an existing tour
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               tourId:
+ *                 type: integer
+*               tourName:
+ *                 type: string
  */
 router.post("tours", controller.updateTour)
 
@@ -94,16 +130,36 @@ router.get("/all_countries", controller.getAllCountries)
  * /all_states_by_country:
  *   post:
  *     summary: Get all states by country
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               country:
+ *                 type: string
  */
 router.post("/all_states_by_country", controller.getAllStatesByCountry)
 
 /**
  * @swagger
- * /all_cities_by_state_country:
+ * /all_cities_by_country_state:
  *   post:
- *     summary: Get all cities by state and country
+ *     summary: Get all cities by country and state
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               country:
+ *                 type: string
+ *               state:
+ *                 type: string
  */
-router.post("/all_cities_by_state_country", controller.getAllCitiesByStateCountry)
+router.post("/all_cities_by_country_state", controller.getAllCitiesByCountryState)
 
 /**
  * @swagger

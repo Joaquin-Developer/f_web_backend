@@ -203,7 +203,7 @@ class ApiController {
         })
     }
 
-    static getAllCitiesByStateCountry(req, res) {
+    static getAllCitiesByCountryState(req, res) {
         const { country, state } = req.body
 
         new Query(`
