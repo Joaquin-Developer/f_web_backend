@@ -182,7 +182,7 @@ class ApiController {
     
     static getAllStatesByCountry(req, res) {
         const { country } = req.body
-        
+
         new Query(`
             SELECT DISTINCT st.state_id, st.state_name
             FROM states st
