@@ -1,4 +1,3 @@
-const Tour = require("../modules/Tour")
 const Query = require("../modules/Query")
 
 
@@ -100,6 +99,46 @@ class ApiController {
             })
     }
 
+    static newShowDate(req, res) {
+        const { tourId, cityId, showDate, scenary } = req.body
+
+        if (!tourId || !cityId || !showDate || !scenary) {
+            res.status(500).json({ error: true, message: "Missing params in Body Request" })
+            return
+        }
+        const query = new Query(`INSERT INTO shows VALUES (NULL, ?, ?, ?, ?)`)
+
+        query.insert([tourId, cityId, showDate, scenary])
+            .then(data => {
+                console.log(data)
+                res.status(200).json({
+                    error: false,
+                    message: `Show: ${showDate}, ${tourId}, ${cityId}, ${scenary} - saved in database.` 
+                })
+            })
+            .catch(e => {
+                console.log(e)
+                res.status(500).json({ error: true, message: e.toString() })
+            })
+    }
+
+    static updateShowDate(req, res) {
+
+    }
+
+    static deleteShowDate(req, res) {
+
+    }
+
+    static getAllTours(req, res) {
+        new Query("SELECT tour_id, tour_name FROM tours").select()
+        .then(data => res.status(200).json(JSON.parse(data)))
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({ error: true, message: error.toString() })
+        })
+    }
+
     static newTour(req, res) {
         const { tourName } = req.body
 
@@ -121,62 +160,21 @@ class ApiController {
             })
     }
 
-    static newTourDate(req, res) {
-        const { showDate, showName, scenary, place } = req.body
+    static updateTour(req, res) {
+        const { tourId, tourName } = req.body
 
-        if (!showDate || !showName || !scenary || !place) {
-            res.status(500).json({ error: true, message: "Missing id param in Body Request" })
-            return
-        }
-
-        const query = new Query(`
-            INSERT INTO TOUR
-            VALUES (NULL, ?, ?, ?, ?)
-        `)
-
-        query.insert([showName, scenary, place, showDate])
-            .then(data => {
-                console.log(data)
-                res.status(200).json({ error: false, message: `Tour: ${showName} - saved in database.` })
-            })
-            .catch(e => {
-                console.log(e)
-                res.status(500).json({ error: true, message: e.toString() })
-            })
-    }
-
-    static updateTourDate(req, res) {
-        const { id, showDate, showName, scenary, place } = req.body
-
-        if (!id || !showDate || !showName || !scenary || !place) {
+        if (!tourId || !tourName) {
             res.status(500).json({ error: true, message: "Missing params in Body Request" })
             return
         }
 
-        Query.update(showName, scenary, place, showDate, id)
+        new Query(`UPDATE tours SET tour_name = ? WHERE tour_id = ?`).update([tourName, tourId])
             .then(data => {
                 console.log(data)
-                res.status(200).json({ error: false, message: `Tour: ${showName} - UPDATED in database.` })
+                res.status(200).json({ error: false, message: `Tour: ${tourName} - UPDATED in database.` })
             })
             .catch(e => {
                 res.status(500).json({ error: true, message: e.toString() })
-            })
-    }
-
-    static deleteTourDate(req, res) {
-        const { idTourDate } = req.body
-
-        if (!idTourDate) {
-            res.status(500).json({ error: true, message: "Missing id param in Body Request" })
-            return
-        }
-
-        Query.deleteTourDate(idTourDate)
-            .then(data => {
-                res.status(200).json(data)
-            })
-            .catch(error => {
-                res.status(200).json({ error: true, message: `INTERNAL_ERROR - Tour id ${idTourDate} not deleted` })
             })
     }
 
@@ -222,6 +220,11 @@ class ApiController {
             console.log(error)
             res.status(500).json({ error: true, message: error.toString() })
         })
+    }
+
+    static getTourDatesByLocationV2(req, res) {
+        // TODO - req body: [ lat, lon, city, state, country ]
+        return null
     }
 
     // TODO - Change this!

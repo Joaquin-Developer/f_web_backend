@@ -28,30 +28,14 @@ module.exports = class Query {
         })
     }
 
-    /**
-     * @param {*} show 
-     * @param {*} scenary 
-     * @param {*} place 
-     * @param {*} showDate 
-     * @param {*} tourId 
-     * @returns JSON
-     * TODO: Mejorar manejador de excepciones
-     */
-    static async update(show, scenary, place, showDate, tourId) {
-        const connection = await Database.getMySql2Connection()
-        connection.execute(`
-            UPDATE TOUR
-            SET 
-                tour_show = ?,
-                scenary = ?,
-                place = ?,
-                show_date = ?
-            WHERE tour_id = ?
-        `, [show, scenary, place, showDate, tourId])
-
-        return { error: false, message: "OK" }
+    update(queryParams) {
+        return new Promise((resolve, reject) => {
+            Database.getConnection().query(this.query, queryParams, (error, result) => {
+                if (error) return reject(error)
+                return resolve(JSON.stringify(result))
+            })
+        })
     }
-
 
     static async deleteTourDate(idTourDate) {
         const connection = await Database.getMySql2Connection()
