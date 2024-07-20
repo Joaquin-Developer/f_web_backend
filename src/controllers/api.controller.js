@@ -171,6 +171,51 @@ class ApiController {
             })
     }
 
+    static getAllCountries(req, res) {
+        new Query("SELECT country_name FROM countries").select()
+        .then(data => res.status(200).json(JSON.parse(data)))
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({ error: true, message: error.toString() })
+        })
+    }
+    
+    static getAllStatesByCountry(req, res) {
+        const { country } = req.body
+        
+        new Query(`
+            SELECT DISTINCT c.country_name
+            FROM states st
+            JOIN countries c on st.country_id = c.country_id
+            WHERE upper(c.country_name) = ${country.toUpperCase()}
+        `).select()
+        .then(data => res.status(200).json(JSON.parse(data)))
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({ error: true, message: error.toString() })
+        })
+    }
+
+    static getAllCitiesByStateCountry(req, res) {
+        const { country, state } = req.body
+
+        new Query(`
+            SELECT DISTINCT c.city_name
+            FROM cities c
+            JOIN states st on c.state_id = st.state_id
+            JOIN countries c on st.country_id = c.country_id
+            WHERE
+                upper(c.country_name) = ${country.toUpperCase()}
+                and upper(st.state_name) = ${state.toUpperCase()}
+        `).select()
+        .then(data => res.status(200).json(JSON.parse(data)))
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({ error: true, message: error.toString() })
+        })
+    }
+
+    // TODO - Change this!
     static getTourDatesByLocation(req, res) {
         const { city, state, country, countryCode } = req.body
 
