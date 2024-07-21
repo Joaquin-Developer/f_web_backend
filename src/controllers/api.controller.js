@@ -221,13 +221,13 @@ class ApiController {
     }
     
     static getAllStatesByCountry(req, res) {
-        const { country } = req.body
+        const { countryId } = req.body
 
         new Query(`
             SELECT DISTINCT st.state_id, st.state_name
             FROM states st
             JOIN countries ct on st.country_id = ct.country_id
-            WHERE upper(ct.country_name) = '${country.toUpperCase()}'
+            WHERE ct.country_id = ${countryId}
         `).select()
         .then(data => res.status(200).json(JSON.parse(data)))
         .catch(error => {
@@ -237,7 +237,7 @@ class ApiController {
     }
 
     static getAllCitiesByCountryState(req, res) {
-        const { country, state } = req.body
+        const { countryId, stateId } = req.body
 
         new Query(`
             SELECT DISTINCT c.city_id, c.city_name
@@ -245,8 +245,8 @@ class ApiController {
             JOIN states st on c.state_id = st.state_id
             JOIN countries ct on st.country_id = ct.country_id
             WHERE
-                upper(ct.country_name) = '${country.toUpperCase()}'
-                and upper(st.state_name) = '${state.toUpperCase()}'
+                ct.country_id = ${countryId}
+                and st.state_id = ${stateId}
         `).select()
         .then(data => res.status(200).json(JSON.parse(data)))
         .catch(error => {

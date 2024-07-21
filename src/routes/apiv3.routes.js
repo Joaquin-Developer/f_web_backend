@@ -160,8 +160,8 @@ router.get("/all_countries", controller.getAllCountries)
  *           schema:
  *             type: object
  *             properties:
- *               country:
- *                 type: string
+ *               countryId:
+ *                 type: integer
  */
 router.post("/all_states_by_country", controller.getAllStatesByCountry)
 
@@ -177,10 +177,10 @@ router.post("/all_states_by_country", controller.getAllStatesByCountry)
  *           schema:
  *             type: object
  *             properties:
- *               country:
- *                 type: string
- *               state:
- *                 type: string
+ *               country_id:
+ *                 type: integer
+ *               state_id:
+ *                 type: integer
  */
 router.post("/all_cities_by_country_state", controller.getAllCitiesByCountryState)
 
