@@ -130,22 +130,16 @@ class ApiController {
             return
         }
 
-        const query = new Query(```
-            UPDATE shows
-            SET
-                show_date = ?,
-                scenary = ?
-            WHERE show_id = ?
-        ```)
+        const query = new Query("UPDATE shows SET show_date = ?, scenary = ? WHERE show_id = ?")
 
         query.update([showDate, scenary, showId])
-            .then(data => {
-                console.log(data)
-                res.status(200).json({ error: false, message: `Show: ${showId} - UPDATED in database.` })
-            })
-            .catch(e => {
-                res.status(500).json({ error: true, message: e.toString() })
-            })
+        .then(data => {
+            console.log(data)
+            res.status(200).json({ error: false, message: `Show: ${showId} - UPDATED in database.` })
+        })
+        .catch(e => {
+            res.status(500).json({ error: true, message: e.toString() })
+        })
 
     }
 
