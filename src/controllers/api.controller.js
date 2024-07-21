@@ -123,9 +123,9 @@ class ApiController {
     }
 
     static updateShowDate(req, res) {
-        const { showId, tourId, cityId, showDate, scenary } = req.body
+        const { showId, showDate, scenary } = req.body
 
-        if (!showId || !tourId || !cityId || !showDate || !scenary) {
+        if (!showId || !showDate || !scenary) {
             res.status(500).json({ error: true, message: "Missing params in Body Request" })
             return
         }
@@ -133,14 +133,12 @@ class ApiController {
         const query = new Query(```
             UPDATE shows
             SET
-                tour_id = ?,
-                city_id = ?,
                 show_date = ?,
                 scenary = ?
             WHERE show_id = ?
         ```)
 
-        query.update([tourId, cityId, showDate, scenary, showId])
+        query.update([showDate, scenary, showId])
             .then(data => {
                 console.log(data)
                 res.status(200).json({ error: false, message: `Show: ${showId} - UPDATED in database.` })

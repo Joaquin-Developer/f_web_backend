@@ -67,10 +67,6 @@ router.put("/show_dates", controller.newShowDate)
  *             properties:
  *               showId:
  *                 type: integer
- *               tourId:
- *                 type: integer
- *               cityId:
- *                 type: integer
  *               showDate:
  *                 type: string
  *                 format: date
