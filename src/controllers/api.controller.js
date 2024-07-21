@@ -101,6 +101,7 @@ class ApiController {
 
     static newShowDate(req, res) {
         const { tourId, cityId, showDate, scenary } = req.body
+        console.log({ tourId, cityId, showDate, scenary })
 
         if (!tourId || !cityId || !showDate || !scenary) {
             res.status(500).json({ error: true, message: "Missing params in Body Request" })
